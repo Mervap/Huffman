@@ -9,16 +9,9 @@
 
 using namespace std;
 
-void wait_command() {
-    cout << "$ ";
-    cout.flush();
-}
-
 int start() {
     cout << "  Welcome to Huffman encoder!\n  Write \"help\" for commands "
             "list\n";
-    wait_command();
-
     return 0;
 }
 
@@ -37,7 +30,7 @@ void encode(char *command[]) {
 
         clock_t start = clock();
 
-        std::string s(command[1]);
+        std::string s(command[2]);
         file_encoder file_encoder(s);
         file_encoder.encode_file();
         file_encoder.write_dictionary();
@@ -55,8 +48,8 @@ void decode(char *command[]) {
 
         clock_t start = clock();
 
-        std::string s1(command[1]);
-        std::string s2(command[2]);
+        std::string s1(command[2]);
+        std::string s2(command[3]);
         file_decoder file_decoder(s1);
         file_decoder.decode_file(s2);
 
@@ -69,18 +62,18 @@ void decode(char *command[]) {
 
 int main(int argc, char *argv[]) {
 
-    if (argc == 0) {
+    if (argc == 1) {
         start();
-    } else if (string(argv[0]) == "help") {
+    } else if (string(argv[1]) == "help") {
         help();
-    } else if (string(argv[0]) == "encode") {
-        if (argc != 2) {
+    } else if (string(argv[1]) == "encode") {
+        if (argc != 3) {
             cout << "Wrong argument amount\n";
         } else {
             encode(argv);
         }
-    } else if (string(argv[0]) == "decode") {
-        if (argc != 3) {
+    } else if (string(argv[1]) == "decode") {
+        if (argc != 4) {
             cout << "Wrong argument amount\n";
         } else {
             decode(argv);
@@ -88,5 +81,4 @@ int main(int argc, char *argv[]) {
     } else {
         cout << "No such command\n";
     }
-    wait_command();
 }

@@ -25,7 +25,7 @@ void file_encoder::encode_file() {
 }
 
 void file_encoder::write_dictionary() {
-    file_writer out(filename + ".dict");
+    file_writer out(filename + ".dec.dict");
     encoded_bytes dict(enc.dictionary());
     encoded_bytes mess;
     mess.push_back({file_size, 64});

@@ -14,7 +14,7 @@ file_decoder::file_decoder(std::string filename) : filename(filename),
 
 
 void file_decoder::decode_file(std::string to) {
-    file_reader in(filename + ".dec", file_size);
+    file_reader in(filename, file_size);
     file_writer out(to);
     while (!in.eof()) {
         encoded_bytes z(in.read_encoded(MAX_READ));
