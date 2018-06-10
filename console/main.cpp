@@ -24,36 +24,21 @@ int start() {
 
 void help() {
     cout << "Command list:\n";
-    cout << "   encode <input file>                - encodes file, output file are <input file>.dec and <input file>.dict\n";
+    cout
+            << "   encode <input file>                - encodes file, output file are <input file>.dec and <input file>.dict\n";
     cout << "   decode <input file> <output file>  - decodes file, find file <input file>.dec and <input file>.dict,\n "
             "                                       result in <output file>\n";
     cout << "   exit                               - exit from encoder\n";
 }
 
-vector<string> parse_command(string command) {
-    vector<string> result;
-
-    size_t last = 0;
-    for (size_t i = 0; i < command.length(); ++i) {
-        if (command[i] == ' ') {
-            if (i > last) {
-                result.push_back(command.substr(last, i - last));
-            }
-
-            last = i + 1;
-        }
-    }
-    result.push_back(command.substr(last));
-    return result;
-}
-
-void encode(vector<string> const &command) {
+void encode(char *command[]) {
     try {
         cout << "Encoding...\n";
 
         clock_t start = clock();
 
-        file_encoder file_encoder(command[1]);
+        std::string s(command[1]);
+        file_encoder file_encoder(s);
         file_encoder.encode_file();
         file_encoder.write_dictionary();
 
@@ -64,14 +49,16 @@ void encode(vector<string> const &command) {
     }
 }
 
-void decode(vector<string> const &command) {
+void decode(char *command[]) {
     try {
         cout << "Decoding...\n";
 
         clock_t start = clock();
 
-        file_decoder file_decoder(command[1]);
-        file_decoder.decode_file(command[2]);
+        std::string s1(command[1]);
+        std::string s2(command[2]);
+        file_decoder file_decoder(s1);
+        file_decoder.decode_file(s2);
 
         clock_t end = clock();
         cout << "Finish. Time spent: " << (double) (end - start) / CLOCKS_PER_SEC * 1000.0 << "ms\n";
@@ -80,31 +67,26 @@ void decode(vector<string> const &command) {
     }
 }
 
-int main() {
-    start();
+int main(int argc, char *argv[]) {
 
-    string input;
-    while (getline(cin, input)) {
-        vector<string> command = parse_command(input);
-        if (command[0] == "encode") {
-            if (command.size() != 2) {
-                cout << "Wrong argument amount\n";
-            } else {
-                encode(command);
-            }
-        } else if (command[0] == "decode") {
-            if (command.size() != 3) {
-                cout << "Wrong arguments amount\n";
-            } else {
-                decode(command);
-            }
-        } else if (command[0] == "help") {
-            help();
-        } else if (command[0] == "exit") {
-            exit(0);
+    if (argc == 0) {
+        start();
+    } else if (string(argv[0]) == "help") {
+        help();
+    } else if (string(argv[0]) == "encode") {
+        if (argc != 2) {
+            cout << "Wrong argument amount\n";
         } else {
-            cout << "No such command\n";
+            encode(argv);
         }
-        wait_command();
+    } else if (string(argv[0]) == "decode") {
+        if (argc != 3) {
+            cout << "Wrong argument amount\n";
+        } else {
+            decode(argv);
+        }
+    } else {
+        cout << "No such command\n";
     }
+    wait_command();
 }
