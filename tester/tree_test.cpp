@@ -1,0 +1,85 @@
+#include <algorithm>
+#include <cassert>
+#include <cstdlib>
+#include <vector>
+#include <utility>
+#include <gtest.h>
+#include <fstream>
+#include <bitset>
+
+#include "huffman_tree.h"
+#include "encoded_bytes.h"
+#include "encoder.h"
+#include "decoder.h"
+
+std::vector<byte> encode_decode(std::vector<byte> x) {
+    counter cnt;
+    cnt.update(x);
+    encoder en(cnt);
+    encoded_bytes v = en.dictionary();
+    decoder dec(v);
+    encoded_bytes z = en.encode(x);
+    return dec.decode(z);
+}
+
+TEST(correctness, bamboo) {
+    std::vector<byte> x = {1, 1, 1, 1, 3, 3, 3, 0, 0, 2};
+    std::vector<byte> y = encode_decode(x);
+    EXPECT_TRUE(std::equal(x.begin(), x.end(), y.begin()));
+}
+
+TEST(correctness, balance) {
+    std::vector<byte> x = {0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3};
+    std::vector<byte> y = encode_decode(x);
+
+    EXPECT_TRUE(std::equal(x.begin(), x.end(), y.begin()));
+}
+
+TEST(correctness, fill) {
+    std::vector<byte> x = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+    std::vector<byte> y = encode_decode(x);
+
+    EXPECT_TRUE(std::equal(x.begin(), x.end(), y.begin()));
+}
+
+TEST(correctness, random) {
+    size_t count = 30;
+
+    for (size_t i = 0; i < count; ++i) {
+        std::vector<byte> x(static_cast<size_t>(rand() % 200000));
+        for (unsigned char &j : x) {
+            j = (static_cast<byte>(rand() % MAX_DATA));
+        }
+
+        std::vector<byte> y = encode_decode(x);
+
+        EXPECT_TRUE(std::equal(x.begin(), x.end(), y.begin()));
+
+        /*for(size_t j = 0; j < z.size(); ++j) {
+            std::cout << std::bitset<sizeof(z.get(j)) * 8>(z.get(j));
+        }
+        std::cout << "\n";                                              // Some info
+        for (int i = 0; i < x.size(); ++i) {
+            std::cout << (int) x[i] << " " << (int) y[i] << "\n";
+        }*/
+    }
+}
+
+TEST(correctness, 10MB) {
+    std::vector<byte> x(static_cast<size_t>(10 * 1024 * 1024));
+    for (unsigned char &j : x) {
+        j = (static_cast<byte>(rand() % MAX_DATA));
+    }
+
+    std::vector<byte> y = encode_decode(x);
+
+    EXPECT_TRUE(std::equal(x.begin(), x.end(), y.begin()));
+}
+
+TEST(correctness, empty) {
+
+    std::vector<byte> x;
+    std::vector<byte> y = encode_decode(x);
+
+    EXPECT_TRUE(std::equal(x.begin(), x.end(), y.begin()));
+}
