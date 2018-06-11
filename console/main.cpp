@@ -9,6 +9,11 @@
 
 using namespace std;
 
+void wait_command() {
+    cout << "$ ";
+    cout.flush();
+}
+
 int start() {
     cout << "  Welcome to Huffman encoder!\n  Write \"help\" for commands "
             "list\n";
@@ -16,48 +21,92 @@ int start() {
 }
 
 void help() {
+    cout << "Use -cl for command line argument or\n"
+            "     -u for command shell\n";
     cout << "Command list:\n";
     cout
-            << "   encode <input file>                - encodes file, output file are <input file>.dec and <input file>.dict\n";
-    cout << "   decode <input file> <output file>  - decodes file, find file <input file>.dec and <input file>.dict,\n "
-            "                                       result in <output file>\n";
-    cout << "   exit                               - exit from encoder\n";
+            << "   encode <input file>                - encode file, output file are <input file>.dec and <input file>.dec.dict\n";
+    cout
+            << "   decode <input file> <output file>  - decode file <input file> and <input file>.dict, result in <output file>\n";
+    cout << "   exit                               - exit from shell\n";
 }
 
-void encode(char *command[]) {
-    try {
-        cout << "Encoding...\n";
+vector<string> parse_command(string command) {
+    vector<string> result;
 
-        clock_t start = clock();
+    size_t last = 0;
+    for (size_t i = 0; i < command.length(); ++i) {
+        if (command[i] == ' ') {
+            if (i > last) {
+                result.push_back(command.substr(last, i - last));
+            }
 
-        std::string s(command[2]);
-        file_encoder file_encoder(s);
-        file_encoder.encode_file();
-        file_encoder.write_dictionary();
-
-        clock_t end = clock();
-        cout << "Finish. Time spent: " << (double) (end - start) / CLOCKS_PER_SEC * 1000.0 << "ms\n";
-    } catch (runtime_error e) {
-        cout << "Error occured: \n" << e.what() << "\n";
+            last = i + 1;
+        }
     }
+    result.push_back(command.substr(last));
+    return result;
 }
 
-void decode(char *command[]) {
-    try {
-        cout << "Decoding...\n";
-
-        clock_t start = clock();
-
-        std::string s1(command[2]);
-        std::string s2(command[3]);
-        file_decoder file_decoder(s1);
-        file_decoder.decode_file(s2);
-
-        clock_t end = clock();
-        cout << "Finish. Time spent: " << (double) (end - start) / CLOCKS_PER_SEC * 1000.0 << "ms\n";
-    } catch (runtime_error e) {
-        cout << "Error occured: \n" << e.what() << "\n";
+void encode(vector<string> const &args) {
+    if (args.size() > 1) {
+        cout << "Encoding " << args.size() << " files:\n";
+    } else {
+        cout << "Encoding 1 file\n";
     }
+
+    clock_t start = clock();
+
+    for (size_t i = 0; i < args.size(); ++i) {
+        try {
+            if (args.size() > 1) {
+                cout << "File " << i + 1 << ": \"" << args[i] << "\"\n";
+            }
+
+            file_encoder file_encoder(args[i]);
+            file_encoder.encode_file();
+            file_encoder.write_dictionary();
+
+            if (args.size() > 1) {
+                cout << "Done!\n\n";
+            }
+        } catch (runtime_error e) {
+            cout << "Error occured: \n" << e.what() << "\n\n";
+        }
+    }
+
+    clock_t end = clock();
+    cout << "Finish. Time spent: " << (double) (end - start) / CLOCKS_PER_SEC * 1000.0 << "ms\n";
+}
+
+void decode(vector<string> const &args) {
+    if (args.size() > 2) {
+        cout << "Decoding " << args.size() / 2 << " files\n";
+    } else {
+        cout << "Decoding 1 file\n";
+    }
+
+    clock_t start = clock();
+
+    for (size_t i = 0; i < args.size(); i += 2) {
+        try {
+            if (args.size() > 2) {
+                cout << "File " << i / 2 + 1 << ": \"" << args[i] << "\"\n";
+            }
+
+            file_decoder file_decoder(args[i]);
+            file_decoder.decode_file(args[i + 1]);
+
+            if (args.size() > 2) {
+                cout << "Done!\n\n";
+            }
+        } catch (runtime_error e) {
+            cout << "Error occured: \n" << e.what() << "\n\n";
+        }
+    }
+
+    clock_t end = clock();
+    cout << "Finish. Time spent: " << (double) (end - start) / CLOCKS_PER_SEC * 1000.0 << "ms\n";
 }
 
 int main(int argc, char *argv[]) {
@@ -66,17 +115,58 @@ int main(int argc, char *argv[]) {
         start();
     } else if (string(argv[1]) == "help") {
         help();
-    } else if (string(argv[1]) == "encode") {
-        if (argc != 3) {
-            cout << "Wrong argument amount\n";
+    } else if (string(argv[1]) == "-cl") {
+        if (string(argv[2]) == "help") {
+            help();
         } else {
-            encode(argv);
+            vector<string> args;
+            for (int i = 3; i < argc; ++i) {
+                args.emplace_back(argv[i]);
+            }
+
+            if (string(argv[2]) == "encode") {
+                if (args.empty()) {
+                    cout << "Wrong argument amount\n";
+                } else {
+                    encode(args);
+                }
+            } else if (string(argv[2]) == "decode") {
+                if (args.empty() || args.size() % 2 == 1) {
+                    cout << "Wrong argument amount\n";
+                } else {
+                    decode(args);
+                }
+            } else {
+                cout << "No such command\n";
+            }
         }
-    } else if (string(argv[1]) == "decode") {
-        if (argc != 4) {
-            cout << "Wrong argument amount\n";
-        } else {
-            decode(argv);
+    } else if (string(argv[1]) == "-u") {
+        wait_command();
+        string input;
+        while (getline(cin, input)) {
+            vector<string> args = parse_command(input);
+            string command = args[0];
+            args.erase(args.begin());
+            if (command == "encode") {
+                if (args.empty()) {
+                    cout << "Wrong argument amount\n";
+                } else {
+                    encode(args);
+                }
+            } else if (command == "decode") {
+                if (args.empty() || args.size() % 2 == 1) {
+                    cout << "Wrong arguments amount\n";
+                } else {
+                    decode(args);
+                }
+            } else if (command == "help") {
+                help();
+            } else if (command == "exit") {
+                exit(0);
+            } else {
+                cout << "No such command\n";
+            }
+            wait_command();
         }
     } else {
         cout << "No such command\n";

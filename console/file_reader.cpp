@@ -5,7 +5,7 @@ file_reader::file_reader(std::string filename) : file_reader(filename, 0) {}
 file_reader::file_reader(std::string filename, size_t length) : in(filename, std::ios::binary), leaf_symbols(length) {
     if (in.fail()) {
         in.close();
-        throw std::runtime_error("File doesnt exit - " + filename);
+        throw std::runtime_error("File doesnt exit - \"" + filename + "\"");
     }
 }
 
