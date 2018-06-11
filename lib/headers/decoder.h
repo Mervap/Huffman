@@ -18,7 +18,6 @@ struct decoder {
 
 private:
     huffman_tree tree;
-    huffman_tree decode_tree(encoded_bytes &encoded_tree);
 };
 
 #endif //HUFFMAN_DECODER_H

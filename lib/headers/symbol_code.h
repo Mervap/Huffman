@@ -13,7 +13,6 @@ struct symbol_code {
 
     symbol_code(ull x, byte l) : code(x), length(l) {}
     symbol_code(byte x) : code(x), length(8) {}
-    bool empty();
 
     void push_back(bool x);
     void pop_back();

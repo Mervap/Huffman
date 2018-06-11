@@ -3,10 +3,6 @@
 //
 #include "headers/symbol_code.h"
 
-bool symbol_code::empty() {
-    return length == 0;
-}
-
 void symbol_code::push_back(bool x) {
     code <<= 1;
     code |= x;

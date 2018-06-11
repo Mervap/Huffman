@@ -3,12 +3,7 @@
 typedef huffman_tree::node node;
 
 
-decoder::decoder(encoded_bytes &dict) : tree(decode_tree(dict)) {}
-
-huffman_tree decoder::decode_tree(encoded_bytes &encoded_tree) {
-    huffman_tree tree(encoded_tree);
-    return tree;
-}
+decoder::decoder(encoded_bytes &dict) : tree(huffman_tree(dict)) {}
 
 std::vector<byte> decoder::decode(encoded_bytes &data) {
     std::vector<byte> result;
