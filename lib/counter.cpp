@@ -12,15 +12,11 @@ void counter::update(std::vector<byte> const &data) {
     }
 }
 
-ull counter::get(size_t ind) {
-    return cnt[ind];
-}
-
 std::map<byte, ull> counter::get_not_zero() {
     std::map<byte, ull> res;
     for (size_t i = 0; i < MAX_DATA; ++i) {
-        if (get(i) != 0) {
-            res[i] = get(i);
+        if (cnt[i] != 0) {
+            res[i] = cnt[i];
         }
     }
 

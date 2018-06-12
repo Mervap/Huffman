@@ -12,7 +12,6 @@ struct counter {
     counter();
 
     void update(std::vector<byte> const &data);
-    ull get(size_t ind);
     std::map<byte, ull> get_not_zero();
 
 private:
