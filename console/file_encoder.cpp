@@ -3,6 +3,7 @@
 //
 
 #include "file_encoder.h"
+#include "console_color_maker.h"
 
 file_encoder::file_encoder(std::string filename) : filename(filename), cnt(count_file()), enc(cnt) {}
 
@@ -18,12 +19,24 @@ counter file_encoder::count_file() {
 void file_encoder::encode_file() {
     file_reader in(filename);
     file_writer out(filename + ".dec");
+    color_maker color;
     size_t i = 1;
     while (!in.eof()) {
         out.write_encoded(enc.encode(in.read_decoded(MAX_READ)));
-        std::cout << "\r" << 100 * i / cnt.get_times() << "%"; std::cout.flush();
+        ull percents = 100 * i / cnt.get_times();
+
+        if (percents > 33) {
+            color.change_mode();
+        }
+        if (percents > 66) {
+            color.change_mode();
+        }
+
+        std::cout << "\r" << percents << "%";
+        std::cout.flush();
         ++i;
     }
+    color.normal_mode();
     file_size = out.get_written_amount();
 }
 

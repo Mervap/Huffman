@@ -12,10 +12,12 @@ add_executable(Console
         console/file_writer.h
         console/file_encoder.h
         console/file_decoder.h
+        console/console_color_maker.h
         console/file_reader.cpp
         console/file_writer.cpp
         console/file_encoder.cpp
         console/file_decoder.cpp
+        console/console_color_maker.cpp
         console/main.cpp)
 
 add_executable(Huffman_test
