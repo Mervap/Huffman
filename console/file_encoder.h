@@ -15,7 +15,7 @@ struct file_encoder {
     file_encoder() = delete;
 
     explicit file_encoder(std::string filename);
-    void encode_file();
+    void encode_file(std::string mode);
     void write_dictionary();
 
 private:
