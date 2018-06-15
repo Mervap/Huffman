@@ -66,7 +66,7 @@ void encode(vector<string> const &args) {
             cout << "Preparation\r"; cout.flush();
             file_encoder file_encoder(args[i]);
             cout << "           ";
-            file_encoder.encode_file("console");
+            file_encoder.encode_file();
             file_encoder.write_dictionary();
 
             if (args.size() > 1) {
@@ -104,7 +104,7 @@ void decode(vector<string> const &args) {
             }
 
             file_decoder file_decoder(args[i]);
-            file_decoder.decode_file(args[i + 1], "console");
+            file_decoder.decode_file(args[i + 1]);
 
             if (args.size() > 2) {
                 cout << "\nDone!\n";

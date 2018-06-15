@@ -16,36 +16,29 @@ counter file_encoder::count_file() {
     return counter;
 }
 
-void file_encoder::encode_file(std::string mode) {
+void file_encoder::encode_file() {
     file_reader in(filename);
     file_writer out(filename + ".dec");
+    color_maker color;
+    color.change_mode();
 
-    if (mode == "testing") {
-        while (!in.eof()) {
-            out.write_encoded(enc.encode(in.read_decoded(MAX_READ)));
+    size_t i = 1;
+    while (!in.eof()) {
+        out.write_encoded(enc.encode(in.read_decoded(MAX_READ)));
+        ull percents = 100 * i / cnt.get_times();
+
+        if (color.get_mode() == 1 && percents > 33) {
+            color.change_mode();
         }
-    } else if (mode == "console") {
-        color_maker color;
-        color.change_mode();
-
-        size_t i = 1;
-        while (!in.eof()) {
-            out.write_encoded(enc.encode(in.read_decoded(MAX_READ)));
-            ull percents = 100 * i / cnt.get_times();
-
-            if (color.get_mode() == 1 && percents > 33) {
-                color.change_mode();
-            }
-            if (color.get_mode() == 2 && percents > 66) {
-                color.change_mode();
-            }
-
-            std::cout << "\r" << percents << "%";
-            std::cout.flush();
-            ++i;
+        if (color.get_mode() == 2 && percents > 66) {
+            color.change_mode();
         }
-        color.normal_mode();
+
+        std::cout << "\r" << percents << "%";
+        std::cout.flush();
+        ++i;
     }
+    color.normal_mode();
     file_size = out.get_written_amount();
 }
 
