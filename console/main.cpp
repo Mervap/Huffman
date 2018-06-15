@@ -63,7 +63,7 @@ void encode(vector<string> const &args) {
                 cout << (i != 0 ? "\n" : "") << "File " << i + 1 << ": \"" << args[i] << "\"\n";
             }
 
-            cout << "Preparation\r";
+            cout << "Preparation\r"; cout.flush();
             file_encoder file_encoder(args[i]);
             cout << "           ";
             file_encoder.encode_file();
