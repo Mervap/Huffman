@@ -60,10 +60,12 @@ void encode(vector<string> const &args) {
     for (size_t i = 0; i < args.size(); ++i) {
         try {
             if (args.size() > 1) {
-                cout << (i != 0 ? "\n" : "") << "File " << i + 1 << ": \"" << args[i] << "\"";
+                cout << (i != 0 ? "\n" : "") << "File " << i + 1 << ": \"" << args[i] << "\"\n";
             }
 
+            cout << "Preparation";
             file_encoder file_encoder(args[i]);
+            cout << "\r           ";
             file_encoder.encode_file();
             file_encoder.write_dictionary();
 
@@ -71,7 +73,7 @@ void encode(vector<string> const &args) {
                 cout << "\nDone!\n";
             }
         } catch (runtime_error e) {
-            cout << "Error occured: \n" << e.what() << "\n\n";
+            cout << "\nError occured: \n" << e.what() << "\n";
         }
     }
 
@@ -98,22 +100,29 @@ void decode(vector<string> const &args) {
     for (size_t i = 0; i < args.size(); i += 2) {
         try {
             if (args.size() > 2) {
-                cout << "File " << i / 2 + 1 << ": \"" << args[i] << "\"\n";
+                cout << (i != 0 ? "\n" : "") << "File " << i / 2 + 1 << ": \"" << args[i] << "\"\n";
             }
 
             file_decoder file_decoder(args[i]);
             file_decoder.decode_file(args[i + 1]);
 
             if (args.size() > 2) {
-                cout << "Done!\n\n";
+                cout << "\nDone!\n";
             }
         } catch (runtime_error e) {
-            cout << "Error occured: \n" << e.what() << "\n\n";
+            cout << "\nError occured: \n" << e.what() << "\n";
         }
     }
 
     clock_t end = clock();
-    cout << "Finish. Time spent: " << (double) (end - start) / CLOCKS_PER_SEC * 1000.0 << "ms\n";
+    double time = (double) (end - start) / CLOCKS_PER_SEC * 1000.0;
+    string ctime = "ms";
+
+    if(time > 100000) {
+        time /= 1000;
+        ctime = "s";
+    }
+    cout << "\nFinish. Time spent: " << time << ctime << "\n";
 }
 
 int main(int argc, char *argv[]) {
