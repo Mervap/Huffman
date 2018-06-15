@@ -21,7 +21,7 @@ void file_encoder::encode_file() {
     file_writer out(filename + ".dec");
     color_maker color;
     color.change_mode();
-    
+
     size_t i = 1;
     while (!in.eof()) {
         out.write_encoded(enc.encode(in.read_decoded(MAX_READ)));
