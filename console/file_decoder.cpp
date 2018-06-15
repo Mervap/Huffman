@@ -26,10 +26,10 @@ void file_decoder::decode_file(std::string to) {
         out.write_decoded(dec.decode(z));
         ull percents = 100 * i / (file_size / MAX_READ / 8);
 
-        if (color.get_mode() < 1 && percents > 33) {
+        if (color.get_mode() == 1 && percents > 33) {
             color.change_mode();
         }
-        if (color.get_mode() < 2 && percents > 66) {
+        if (color.get_mode() == 2 && percents > 66) {
             color.change_mode();
         }
 
