@@ -73,7 +73,7 @@ void encode(vector<string> const &args) {
                 cout << "\nDone!\n";
             }
         } catch (runtime_error e) {
-            cout << "\nError occured: \n" << e.what() << "\n";
+            cout << "Error occured: \n" << e.what() << "\n";
         }
     }
 
