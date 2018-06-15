@@ -60,7 +60,7 @@ void encode(vector<string> const &args) {
     for (size_t i = 0; i < args.size(); ++i) {
         try {
             if (args.size() > 1) {
-                cout << "File " << i + 1 << ": \"" << args[i] << "\"\n";
+                cout << (i != 0 ? "\n" : "") << "File " << i + 1 << ": \"" << args[i] << "\"";
             }
 
             file_encoder file_encoder(args[i]);
@@ -68,7 +68,7 @@ void encode(vector<string> const &args) {
             file_encoder.write_dictionary();
 
             if (args.size() > 1) {
-                cout << "\nDone!\n\n";
+                cout << "\nDone!\n";
             }
         } catch (runtime_error e) {
             cout << "Error occured: \n" << e.what() << "\n\n";
@@ -76,7 +76,14 @@ void encode(vector<string> const &args) {
     }
 
     clock_t end = clock();
-    cout << "\nFinish. Time spent: " << (double) (end - start) / CLOCKS_PER_SEC * 1000.0 << "ms\n";
+    double time = (double) (end - start) / CLOCKS_PER_SEC * 1000.0;
+    string ctime = "ms";
+
+    if(time > 100000) {
+        time /= 1000;
+        ctime = "s";
+    }
+    cout << "\nFinish. Time spent: " << time << "ctime" << "\n";
 }
 
 void decode(vector<string> const &args) {
