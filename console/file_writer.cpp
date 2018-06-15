@@ -15,11 +15,18 @@ void file_writer::write_encoded(encoded_bytes data) {
         return;
     }
 
+    size_t a = data.size();
+    size_t b = storage.size();
+
     for (size_t i = 0; i < data.size() - 1; ++i) {
         storage.push_back({data.get(i), 64});
     }
 
+    b = storage.size();
+
     storage.push_back({(data.get(data.size() - 1) >> (64 - data.get_last())), static_cast<byte>(data.get_last())});
+
+    b = storage.size();
 
     std::string result;
     result.reserve(data.size() / 8);
@@ -31,12 +38,12 @@ void file_writer::write_encoded(encoded_bytes data) {
         }
     }
 
-    if (data.get_last() != 0) {
-        ull x = data.get(data.size() - 1);
+    if (storage.get_last() != 0) {
+        ull x = storage.get(storage.size() - 1);
         size_t i = 8;
 
-        if (data.get_last() > 8) {
-            for (; i < data.get_last(); i += 8) {
+        if (storage.get_last() > 8) {
+            for (; i < storage.get_last(); i += 8) {
                 result.push_back(static_cast<byte>((x >> (64 - i)) & 255));
             }
         }
