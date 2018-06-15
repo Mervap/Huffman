@@ -76,7 +76,7 @@ void encode(vector<string> const &args) {
     }
 
     clock_t end = clock();
-    cout << "Finish. Time spent: " << (double) (end - start) / CLOCKS_PER_SEC * 1000.0 << "ms\n";
+    cout << "\nFinish. Time spent: " << (double) (end - start) / CLOCKS_PER_SEC * 1000.0 << "ms\n";
 }
 
 void decode(vector<string> const &args) {

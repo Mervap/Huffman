@@ -21,8 +21,7 @@ void file_encoder::encode_file() {
     size_t i = 1;
     while (!in.eof()) {
         out.write_encoded(enc.encode(in.read_decoded(MAX_READ)));
-        std::cout << "r" << 100 * i / cnt.get_times() << "%";
-        std::cout.flush();
+        std::cout << "\r" << 100 * i / cnt.get_times() << "%"; std::cout.flush();
         ++i;
     }
     file_size = out.get_written_amount();
