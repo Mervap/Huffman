@@ -20,7 +20,7 @@ void file_decoder::decode_file(std::string to) {
     while (!in.eof()) {
         encoded_bytes z(in.read_encoded(MAX_READ));
         out.write_decoded(dec.decode(z));
-        std::cout << "\r" << 100 * i / (file_size / MAX_READ) << "%"; std::cout.flush();
+        std::cout << "\r" << 100 * i / (file_size / MAX_READ / 8) << "%"; std::cout.flush();
         ++i;
     }
 }
