@@ -13,7 +13,7 @@ public:
     file_decoder() = delete;
     explicit file_decoder(std::string filename);
 
-    void decode_file(std::string to);
+    void decode_file(std::string to, std::string mode);
 
 private:
     std::string filename;
