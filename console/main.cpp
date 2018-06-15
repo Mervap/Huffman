@@ -83,7 +83,7 @@ void encode(vector<string> const &args) {
         time /= 1000;
         ctime = "s";
     }
-    cout << "\nFinish. Time spent: " << time << "ctime" << "\n";
+    cout << "\nFinish. Time spent: " << time << ctime << "\n";
 }
 
 void decode(vector<string> const &args) {
