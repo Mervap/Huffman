@@ -8,11 +8,6 @@
 file_writer::file_writer(std::string filename) : filename(filename),
                                                  out(this->filename, std::ios::binary), was_out(0),
                                                  storage() {}
-
-bool check(std::string &result, encoded_bytes) {
-
-}
-
 void file_writer::write_encoded(encoded_bytes data) {
     if (data.empty()) {
         return;
@@ -62,8 +57,6 @@ void file_writer::write_encoded(encoded_bytes data) {
         storage.clear();
     }
 
-    size_t b = data.size();
-    size_t a = result.size();
     was_out += result.size() * 8;
     out << result;
 }

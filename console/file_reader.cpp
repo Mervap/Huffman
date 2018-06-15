@@ -29,7 +29,7 @@ encoded_bytes file_reader::read_encoded(size_t count) {
         if (leaf_symbols >= 8) {
             result.push_back(v);
         } else {
-            result.push_back({v >> (8 - leaf_symbols), static_cast<byte>(leaf_symbols)});
+            result.push_back({static_cast<ull>(v >> (8 - leaf_symbols)), static_cast<byte>(leaf_symbols)});
         }
         leaf_symbols -= 8;
     }
