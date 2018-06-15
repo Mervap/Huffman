@@ -24,7 +24,8 @@ void file_decoder::decode_file(std::string to) {
     while (!in.eof()) {
         encoded_bytes z(in.read_encoded(MAX_READ));
         out.write_decoded(dec.decode(z));
-        ull percents = std::min(100ull, 100ull * i / (std::max(1ull, static_cast<ull>(file_size / MAX_READ / 8))));
+
+        ull percents = std::min(100ull, 100ull * i / (file_size != 0 ? static_cast<ull>(file_size / MAX_READ / 8) : 1));
 
         if (color.get_mode() == 1 && percents > 33) {
             color.change_mode();
