@@ -14,8 +14,10 @@ struct counter {
     void update(std::vector<byte> const &data);
     std::map<byte, ull> get_not_zero();
 
+    size_t get_times();
 private:
     std::vector<ull> cnt;
+    size_t times;
 };
 
 #endif //HUFFMAN_COUNTER_H

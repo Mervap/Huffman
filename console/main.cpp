@@ -68,7 +68,7 @@ void encode(vector<string> const &args) {
             file_encoder.write_dictionary();
 
             if (args.size() > 1) {
-                cout << "Done!\n\n";
+                cout << "\nDone!\n\n";
             }
         } catch (runtime_error e) {
             cout << "Error occured: \n" << e.what() << "\n\n";
@@ -110,7 +110,7 @@ void decode(vector<string> const &args) {
 }
 
 int main(int argc, char *argv[]) {
-
+    std::cout << "a" << "\r";
     if (argc == 1) {
         start();
     } else if (string(argv[1]) == "help") {

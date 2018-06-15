@@ -23,7 +23,6 @@ private:
     counter cnt;
     encoder enc;
 
-
     size_t file_size;
     counter count_file();
 };

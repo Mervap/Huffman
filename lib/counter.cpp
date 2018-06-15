@@ -4,9 +4,10 @@
 
 #include "counter.h"
 
-counter::counter() : cnt(MAX_DATA) {}
+counter::counter() : cnt(MAX_DATA), times(0) {}
 
 void counter::update(std::vector<byte> const &data) {
+    ++times;
     for (auto el : data) {
         ++cnt[el];
     }
@@ -21,4 +22,8 @@ std::map<byte, ull> counter::get_not_zero() {
     }
 
     return res;
+}
+
+size_t counter::get_times() {
+    return times;
 }
