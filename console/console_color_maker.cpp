@@ -17,3 +17,7 @@ void color_maker::change_mode() {
 void color_maker::normal_mode() {
     std::cout << "\x1b[0m";
 }
+
+int color_maker::get_mode() {
+    return current_collor;
+}

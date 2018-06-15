@@ -19,15 +19,17 @@ void file_decoder::decode_file(std::string to) {
     file_writer out(to);
     size_t i = 1;
     color_maker color;
+    color.change_mode();
+
     while (!in.eof()) {
         encoded_bytes z(in.read_encoded(MAX_READ));
         out.write_decoded(dec.decode(z));
         ull percents = 100 * i / (file_size / MAX_READ / 8);
 
-        if (percents > 33) {
+        if (color.get_mode() < 1 && percents > 33) {
             color.change_mode();
         }
-        if (percents > 66) {
+        if (color.get_mode() < 2 && percents > 66) {
             color.change_mode();
         }
 

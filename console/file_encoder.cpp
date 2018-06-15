@@ -20,15 +20,17 @@ void file_encoder::encode_file() {
     file_reader in(filename);
     file_writer out(filename + ".dec");
     color_maker color;
+    color.change_mode();
+    
     size_t i = 1;
     while (!in.eof()) {
         out.write_encoded(enc.encode(in.read_decoded(MAX_READ)));
         ull percents = 100 * i / cnt.get_times();
 
-        if (percents > 33) {
+        if (color.get_mode() < 1 && percents > 33) {
             color.change_mode();
         }
-        if (percents > 66) {
+        if (color.get_mode() < 2 && percents > 66) {
             color.change_mode();
         }
 

@@ -13,10 +13,11 @@ struct color_maker {
 
     void change_mode();
     void normal_mode();
+    int get_mode();
 
 private:
     int current_collor;
-    const std::string colors[] = {"31", "33", "32"};
+    const std::string colors[3] = {"31", "33", "32"};
 };
 
 #endif //HUFFMAN_CONSOLE_COLOR_MAKER_H
