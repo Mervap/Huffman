@@ -9,6 +9,9 @@ file_writer::file_writer(std::string filename) : filename(filename),
                                                  out(this->filename, std::ios::binary), was_out(0),
                                                  storage() {}
 
+bool check(std::string &result, encoded_bytes) {
+
+}
 
 void file_writer::write_encoded(encoded_bytes data) {
     if (data.empty()) {
@@ -22,7 +25,7 @@ void file_writer::write_encoded(encoded_bytes data) {
     storage.push_back({(data.get(data.size() - 1) >> (64 - data.get_last())), static_cast<byte>(data.get_last())});
 
     std::string result;
-    result.reserve(data.size() / 8);
+    result.reserve((storage.size() - 1) * 8);
 
     for (size_t i = 0; i < storage.size() - 1; ++i) {
         ull x = storage.get(i);
@@ -52,14 +55,15 @@ void file_writer::write_encoded(encoded_bytes data) {
             }
         } else {
             encoded_bytes new_storage;
-            new_storage.push_back(
-                    symbol_code(x & (255ull << 56), storage.get_last()));
+            new_storage.push_back({(x >> (64 - storage.get_last()) & 255), static_cast<byte>(storage.get_last())});
             storage = new_storage;
         }
     } else {
         storage.clear();
     }
 
+    size_t b = data.size();
+    size_t a = result.size();
     was_out += result.size() * 8;
     out << result;
 }
@@ -78,7 +82,7 @@ size_t file_writer::get_written_amount() {
 }
 
 file_writer::~file_writer() {
-    if (storage.size() > 0) {
+    if (!storage.empty()) {
         out << static_cast<byte>((storage.get(0) >> (64 - 8)) & 255);
     }
     out.close();

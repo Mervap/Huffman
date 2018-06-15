@@ -3,7 +3,7 @@
 typedef huffman_tree::node node;
 
 
-decoder::decoder(encoded_bytes &dict) : tree(huffman_tree(dict)) {}
+decoder::decoder(encoded_bytes &dict) : tree(huffman_tree(dict)), current(tree.root) {}
 
 std::vector<byte> decoder::decode(encoded_bytes &data) {
     std::vector<byte> result;
@@ -14,24 +14,23 @@ std::vector<byte> decoder::decode(encoded_bytes &data) {
     size_t i = 0;
     size_t total_size = (data.size() - 1) * 64 + data.get_last();
 
-    node *cur = tree.root;
     while (i < total_size) {
-        while (i < total_size && cur != nullptr && !cur->leaf) {
+        while (i < total_size && current != nullptr && !current->leaf) {
             if (data[i]) {
-                cur = cur->r;
+                current = current->r;
             } else {
-                cur = cur->l;
+                current = current->l;
             }
             ++i;
         }
 
-        if (cur == nullptr) {
+        if (current == nullptr) {
             throw std::runtime_error("File is corrupted");
         }
 
-        if (cur->leaf) {
-            result.push_back(cur->symbol);
-            cur = tree.root;
+        if (current->leaf) {
+            result.push_back(current->symbol);
+            current = tree.root;
         }
     }
     return result;

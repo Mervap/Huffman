@@ -18,6 +18,7 @@ struct decoder {
 
 private:
     huffman_tree tree;
+    node* current;
 };
 
 #endif //HUFFMAN_DECODER_H
