@@ -15,18 +15,11 @@ void file_writer::write_encoded(encoded_bytes data) {
         return;
     }
 
-    size_t a = data.size();
-    size_t b = storage.size();
-
     for (size_t i = 0; i < data.size() - 1; ++i) {
         storage.push_back({data.get(i), 64});
     }
 
-    b = storage.size();
-
     storage.push_back({(data.get(data.size() - 1) >> (64 - data.get_last())), static_cast<byte>(data.get_last())});
-
-    b = storage.size();
 
     std::string result;
     result.reserve(data.size() / 8);
@@ -46,18 +39,23 @@ void file_writer::write_encoded(encoded_bytes data) {
             for (; i < storage.get_last(); i += 8) {
                 result.push_back(static_cast<byte>((x >> (64 - i)) & 255));
             }
-        }
 
-        encoded_bytes new_storage;
-        if (i == storage.get_last()) {
-            result.push_back(static_cast<byte>((x >> (64 - i)) & 255));
-            storage.clear();
-        } else if (i > storage.get_last()) {
-            new_storage.push_back({((x >> (64 - i) & 255) >> (8 - storage.get_last() % 8)),
-                                   static_cast<byte>(storage.get_last() % 8)});
+
+            encoded_bytes new_storage;
+            if (i == storage.get_last()) {
+                result.push_back(static_cast<byte>((x >> (64 - i)) & 255));
+                storage.clear();
+            } else if (i > storage.get_last()) {
+                new_storage.push_back({((x >> (64 - i) & 255) >> (8 - storage.get_last() % 8)),
+                                       static_cast<byte>(storage.get_last() % 8)});
+                storage = new_storage;
+            }
+        } else {
+            encoded_bytes new_storage;
+            new_storage.push_back(
+                    symbol_code(x & (255ull << 56), storage.get_last()));
             storage = new_storage;
         }
-
     } else {
         storage.clear();
     }
