@@ -18,7 +18,9 @@ struct file_writer {
 
     void write_encoded(encoded_bytes data);
     void write_decoded(std::vector<byte> data);
+    void write_remain();
 
+    void out_file_size(ull x);
     size_t get_written_amount();
     ~file_writer();
 

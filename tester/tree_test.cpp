@@ -89,7 +89,6 @@ TEST(correctness, empty) {
 bool file_encode_decode(std::string const &in_name) {
     file_encoder fe(in_name);
     fe.encode_file("testing");
-    fe.write_dictionary();
 
     file_decoder file_decoder(in_name + ".dec");
     file_decoder.decode_file(in_name + "_check", "testing");
@@ -107,7 +106,6 @@ bool file_encode_decode(std::string const &in_name) {
             in1.close();
             in2.close();
             remove(std::string(in_name + ".dec").c_str());
-            remove(std::string(in_name + ".dec.dict").c_str());
             remove(std::string(in_name + "_check").c_str());
             return false;
         }
@@ -116,7 +114,6 @@ bool file_encode_decode(std::string const &in_name) {
     in1.close();
     in2.close();
     remove(std::string(in_name + ".dec").c_str());
-    remove(std::string(in_name + ".dec.dict").c_str());
     remove(std::string(in_name + "_check").c_str());
     return true;
 }

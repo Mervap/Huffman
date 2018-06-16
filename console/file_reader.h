@@ -22,6 +22,8 @@ struct file_reader {
 
     bool eof();
 
+    void set_length(size_t len);
+
 private:
     std::ifstream in;
     size_t leaf_symbols;

@@ -9,14 +9,16 @@
 
 
 file_decoder::file_decoder(std::string filename) : filename(filename),
-                                                   bytes(file_reader(filename + ".dict").read_encoded(file_size,
-                                                                                                      MAX_READ)),
-                                                   dec(bytes) {}
+                                                   in(filename),
+                                                   bytes(in.read_encoded(file_size, MAX_READ)),
+                                                   dec(bytes) {
+
+}
 
 
 void file_decoder::decode_file(std::string to, std::string mode) {
-    file_reader in(filename, file_size);
     file_writer out(to);
+    in.set_length(file_size);
 
     if (mode == "testing") {
         while (!in.eof()) {
@@ -49,6 +51,6 @@ void file_decoder::decode_file(std::string to, std::string mode) {
         }
         color.normal_mode();
     }
-    
+
     dec.check_end();
 }

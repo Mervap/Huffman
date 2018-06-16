@@ -16,7 +16,6 @@ struct file_encoder {
 
     explicit file_encoder(std::string filename);
     void encode_file(std::string mode);
-    void write_dictionary();
 
 private:
     std::string filename;
@@ -25,6 +24,7 @@ private:
 
     size_t file_size;
     counter count_file();
+    void write_dictionary(file_writer& out);
 };
 
 #endif //HUFFMAN_FILE_ENCODER_H

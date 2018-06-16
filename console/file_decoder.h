@@ -7,6 +7,7 @@
 
 #include <string>
 #include "decoder.h"
+#include "file_reader.h"
 
 class file_decoder {
 public:
@@ -17,6 +18,7 @@ public:
 
 private:
     std::string filename;
+    file_reader in;
     encoded_bytes bytes;
     decoder dec;
     size_t file_size;

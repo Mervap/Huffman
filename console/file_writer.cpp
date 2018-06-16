@@ -75,3 +75,24 @@ file_writer::~file_writer() {
     }
     out.close();
 }
+
+void file_writer::write_remain() {
+    if (!storage.empty()) {
+        out << static_cast<byte>((storage.get(0) >> (64 - 8)) & 255);
+        storage.clear();
+        was_out += 8;
+    }
+}
+
+void file_writer::out_file_size(ull x) {
+    ull pos = out.tellp();
+    out.seekp(0);
+
+    std::string res;
+    for (size_t j = 8; j < 65; j += 8) {
+        res.push_back(static_cast<byte>((x >> (64 - j)) & 255ull));
+    }
+
+    out << res;
+    out.seekp(pos);
+}

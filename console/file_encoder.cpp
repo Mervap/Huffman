@@ -5,7 +5,7 @@
 #include "file_encoder.h"
 #include "console_color_maker.h"
 
-file_encoder::file_encoder(std::string filename) : filename(filename), cnt(count_file()), enc(cnt) {}
+file_encoder::file_encoder(std::string filename) : filename(filename), cnt(count_file()), enc(cnt), file_size(0) {}
 
 counter file_encoder::count_file() {
     file_reader in(filename);
@@ -16,9 +16,22 @@ counter file_encoder::count_file() {
     return counter;
 }
 
+void file_encoder::write_dictionary(file_writer &out) {
+    encoded_bytes dict(enc.dictionary());
+    encoded_bytes mess;
+    mess.push_back({0, 64});
+    mess.push_back({static_cast<ui>((dict.size() - 1) * 64 + dict.get_last()), 16});
+    out.write_encoded(mess);
+    out.write_encoded(dict);
+    out.write_remain();
+    file_size -= out.get_written_amount();
+}
+
 void file_encoder::encode_file(std::string mode) {
     file_reader in(filename);
     file_writer out(filename + ".dec");
+
+    write_dictionary(out);
 
     if (mode == "testing") {
         while (!in.eof()) {
@@ -46,15 +59,6 @@ void file_encoder::encode_file(std::string mode) {
         }
         color.normal_mode();
     }
-    file_size = out.get_written_amount();
-}
 
-void file_encoder::write_dictionary() {
-    file_writer out(filename + ".dec.dict");
-    encoded_bytes dict(enc.dictionary());
-    encoded_bytes mess;
-    mess.push_back({file_size, 64});
-    mess.push_back({static_cast<ui>((dict.size() - 1) * 64 + dict.get_last()), 16});
-    out.write_encoded(mess);
-    out.write_encoded(dict);
+    out.out_file_size(file_size + out.get_written_amount());
 }

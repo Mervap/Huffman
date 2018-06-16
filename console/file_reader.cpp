@@ -53,9 +53,13 @@ encoded_bytes file_reader::read_encoded(size_t &size_file, size_t count) {
         leaf_symbols |= c;
     }
 
-    return read_encoded(count);
+    return read_encoded(leaf_symbols / 8 + (leaf_symbols % 8 != 0));
 }
 
 bool file_reader::eof() {
     return in.eof();
+}
+
+void file_reader::set_length(size_t len) {
+    leaf_symbols = len;
 }

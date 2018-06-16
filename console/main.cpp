@@ -67,7 +67,6 @@ void encode(vector<string> const &args) {
             file_encoder file_encoder(args[i]);
             cout << "           ";
             file_encoder.encode_file("console");
-            file_encoder.write_dictionary();
 
             if (args.size() > 1) {
                 cout << "\nDone!\n";
