@@ -25,9 +25,9 @@ void help() {
             "     -u for command shell\n";
     cout << "Command list:\n";
     cout
-            << "   encode <input file>                - encode file, output file are <input file>.dec and <input file>.dec.dict\n";
+            << "   encode <input file>                - encode file, output file is <input file>.dec\n";
     cout
-            << "   decode <input file> <output file>  - decode file <input file> and <input file>.dict, result in <output file>\n";
+            << "   decode <input file> <output file>  - decode file <input file> to <output file>\n";
     cout << "   exit                               - exit from shell\n";
 }
 
