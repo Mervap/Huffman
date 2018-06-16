@@ -65,3 +65,11 @@ void encoded_bytes::clear() {
 void encoded_bytes::reserve(size_t n) {
     value.reserve(n);
 }
+
+void encoded_bytes::copy(encoded_bytes &other) {
+    for (size_t i = 0; i < other.size() - 1; ++i) {
+        push_back(other.value[i]);
+    }
+
+    push_back({(other.get(other.size() - 1) >> (64 - other.get_last())), other.get_last()});
+}

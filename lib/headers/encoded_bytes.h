@@ -24,6 +24,8 @@ struct encoded_bytes {
     bool operator[](size_t ind);
     ull const& get(size_t ind);
 
+    void copy(encoded_bytes &other);
+
     void reserve(size_t n);
     void clear();
 

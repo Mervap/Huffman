@@ -14,11 +14,7 @@ void file_writer::write_encoded(encoded_bytes data) {
         return;
     }
 
-    for (size_t i = 0; i < data.size() - 1; ++i) {
-        storage.push_back(data.get(i));
-    }
-
-    storage.push_back({(data.get(data.size() - 1) >> (64 - data.get_last())), data.get_last()});
+    storage.copy(data);
 
     std::string result;
     result.reserve((storage.size() - 1) * 8);
