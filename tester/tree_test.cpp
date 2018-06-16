@@ -137,8 +137,8 @@ TEST(correctness, file_fill) {
     EXPECT_TRUE(file_encode_decode("fill"));
 }
 
-TEST(correctness, file_10MB) {
-    EXPECT_TRUE(file_encode_decode("10MB"));
+TEST(correctness, file_1MB) {
+    EXPECT_TRUE(file_encode_decode("1MB"));
 }
 
 TEST(correctness, file_empty) {
