@@ -23,8 +23,8 @@ std::vector<byte> file_reader::read_decoded(size_t cnt) {
 encoded_bytes file_reader::read_encoded(size_t count) {
     std::vector<byte> bytes = read_decoded(count);
     encoded_bytes result;
-    result.reserve(count / 8);
-
+    result.reserve(bytes.size());
+    
     for (byte v : bytes) {
         if (leaf_symbols >= 8) {
             result.push_back(v);
