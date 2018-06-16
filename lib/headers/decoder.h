@@ -14,6 +14,7 @@
 struct decoder {
     explicit decoder(encoded_bytes &dict);
 
+    void check_end();
     std::vector<byte> decode(encoded_bytes &data);
 
 private:

@@ -35,3 +35,11 @@ std::vector<byte> decoder::decode(encoded_bytes &data) {
     }
     return result;
 }
+
+void decoder::check_end() {
+    if(current != tree.root) {
+        throw std::runtime_error("File is corrupted");
+    }
+}
+
+

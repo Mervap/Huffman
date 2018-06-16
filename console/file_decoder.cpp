@@ -49,4 +49,6 @@ void file_decoder::decode_file(std::string to, std::string mode) {
         }
         color.normal_mode();
     }
+    
+    dec.check_end();
 }
