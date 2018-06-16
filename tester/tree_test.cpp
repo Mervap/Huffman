@@ -11,6 +11,8 @@
 #include "encoded_bytes.h"
 #include "encoder.h"
 #include "decoder.h"
+#include "file_encoder.h"
+#include "file_decoder.h"
 
 std::vector<byte> encode_decode(std::vector<byte> x) {
     counter cnt;
@@ -82,4 +84,63 @@ TEST(correctness, empty) {
     std::vector<byte> y = encode_decode(x);
 
     EXPECT_TRUE(std::equal(x.begin(), x.end(), y.begin()));
+}
+
+bool file_encode_decode(std::string const &in_name) {
+    file_encoder fe(in_name);
+    fe.encode_file("testing");
+    fe.write_dictionary();
+
+    file_decoder file_decoder(in_name + ".dec");
+    file_decoder.decode_file(in_name + "_check", "testing");
+
+    std::ifstream in1(in_name, std::ios::binary);
+    std::ifstream in2(in_name + "_check", std::ios::binary);
+
+    std::vector<byte> a1(MAX_READ);
+    std::vector<byte> a2(MAX_READ);
+    while (!in1.eof()) {
+        in1.read(reinterpret_cast<char *>(a1.data()), MAX_READ);
+        in2.read(reinterpret_cast<char *>(a2.data()), MAX_READ);
+
+        if (!std::equal(a1.begin(), a1.end(), a2.begin())) {
+            in1.close();
+            in2.close();
+            remove(std::string(in_name + ".dec").c_str());
+            remove(std::string(in_name + ".dec.dict").c_str());
+            remove(std::string(in_name + "_check").c_str());
+            return false;
+        }
+    }
+
+    in1.close();
+    in2.close();
+    remove(std::string(in_name + ".dec").c_str());
+    remove(std::string(in_name + ".dec.dict").c_str());
+    remove(std::string(in_name + "_check").c_str());
+    return true;
+}
+
+TEST(correctness, file_symbol) {
+    EXPECT_TRUE(file_encode_decode("symbol"));
+}
+
+TEST(correctness, file_bamboo) {
+    EXPECT_TRUE(file_encode_decode("bamboo"));
+}
+
+TEST(correctness, file_balance) {
+    EXPECT_TRUE(file_encode_decode("balance"));
+}
+
+TEST(correctness, file_fill) {
+    EXPECT_TRUE(file_encode_decode("fill"));
+}
+
+TEST(correctness, file_10MB) {
+    EXPECT_TRUE(file_encode_decode("10MB"));
+}
+
+TEST(correctness, file_empty) {
+    EXPECT_TRUE(file_encode_decode("empty"));
 }

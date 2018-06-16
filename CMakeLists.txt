@@ -5,9 +5,11 @@ set(CMAKE_CXX_STANDARD 11)
 
 include_directories("tester/gtest/")
 
+include_directories("console/")
+
 include_directories(${HUFFMAN_LIBRARY_SOURCE_DIR}/headers)
 
-add_executable(Console
+set(CONSOLE_FILES
         console/file_reader.h
         console/file_writer.h
         console/file_encoder.h
@@ -17,10 +19,12 @@ add_executable(Console
         console/file_writer.cpp
         console/file_encoder.cpp
         console/file_decoder.cpp
-        console/console_color_maker.cpp
-        console/main.cpp)
+        console/console_color_maker.cpp)
+
+add_executable(Console ${CONSOLE_FILES} console/main.cpp)
 
 add_executable(Huffman_test
+        ${CONSOLE_FILES}
         tester/gtest/gtest.h
         tester/gtest/gtest-all.cc
         tester/gtest/gtest_main.cc
