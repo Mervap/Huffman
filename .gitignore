@@ -6,6 +6,7 @@ Special/
 #In/output files
 cmake-build-debug/
 cmake-build-release/
+cmake-build-relwithdebinfo/
 *.in
 *.out
 

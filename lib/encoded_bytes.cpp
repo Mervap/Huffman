@@ -27,6 +27,15 @@ void encoded_bytes::push_back(symbol_code x) {
     }
 }
 
+void encoded_bytes::push_back(ull x) {
+    if (prev_size == MAX_SIZE) {
+        value.push_back(x);
+    } else {
+        value[value.size() - 1] |= (x >> prev_size);
+        value.push_back(x << (MAX_SIZE - prev_size));
+    }
+}
+
 
 void encoded_bytes::push_back(byte x) {
     push_back({x, BYTE_SIZE});

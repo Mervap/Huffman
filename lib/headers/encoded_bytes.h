@@ -18,6 +18,7 @@ struct encoded_bytes {
 
     void push_back(symbol_code x);
     void push_back(byte x);
+    void push_back(ull x);
 
     size_t get_last();
     bool operator[](size_t ind);

@@ -14,7 +14,7 @@ void file_writer::write_encoded(encoded_bytes data) {
     }
 
     for (size_t i = 0; i < data.size() - 1; ++i) {
-        storage.push_back({data.get(i), 64});
+        storage.push_back(data.get(i));
     }
 
     storage.push_back({(data.get(data.size() - 1) >> (64 - data.get_last())), static_cast<byte>(data.get_last())});
