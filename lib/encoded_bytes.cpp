@@ -6,7 +6,7 @@
 
 encoded_bytes::encoded_bytes() : value(), prev_size(MAX_SIZE) {}
 
-size_t encoded_bytes::get_last() {
+byte encoded_bytes::get_last() {
     return prev_size;
 }
 

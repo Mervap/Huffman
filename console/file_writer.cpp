@@ -17,7 +17,7 @@ void file_writer::write_encoded(encoded_bytes data) {
         storage.push_back(data.get(i));
     }
 
-    storage.push_back({(data.get(data.size() - 1) >> (64 - data.get_last())), static_cast<byte>(data.get_last())});
+    storage.push_back({(data.get(data.size() - 1) >> (64 - data.get_last())), data.get_last()});
 
     std::string result;
     result.reserve((storage.size() - 1) * 8);
@@ -25,7 +25,7 @@ void file_writer::write_encoded(encoded_bytes data) {
     for (size_t i = 0; i < storage.size() - 1; ++i) {
         ull x = storage.get(i);
         for (size_t j = 8; j < 65; j += 8) {
-            result.push_back(static_cast<byte>((x >> (64 - j)) & 255));
+            result.push_back(static_cast<byte>((x >> (64 - j)) & 255ull));
         }
     }
 
@@ -35,22 +35,22 @@ void file_writer::write_encoded(encoded_bytes data) {
 
         if (storage.get_last() > 8) {
             for (; i < storage.get_last(); i += 8) {
-                result.push_back(static_cast<byte>((x >> (64 - i)) & 255));
+                result.push_back(static_cast<byte>((x >> (64 - i)) & 255ull));
             }
 
 
             encoded_bytes new_storage;
             if (i == storage.get_last()) {
-                result.push_back(static_cast<byte>((x >> (64 - i)) & 255));
+                result.push_back(static_cast<byte>((x >> (64 - i)) & 255ull));
                 storage.clear();
             } else if (i > storage.get_last()) {
-                new_storage.push_back({((x >> (64 - i) & 255) >> (8 - storage.get_last() % 8)),
+                new_storage.push_back({((x >> (64 - i)) & 255ull) >> (8 - storage.get_last() % 8),
                                        static_cast<byte>(storage.get_last() % 8)});
                 storage = new_storage;
             }
         } else {
             encoded_bytes new_storage;
-            new_storage.push_back({(x >> (64 - storage.get_last()) & 255), static_cast<byte>(storage.get_last())});
+            new_storage.push_back({x >> (64 - storage.get_last()), storage.get_last()});
             storage = new_storage;
         }
     } else {
@@ -63,6 +63,7 @@ void file_writer::write_encoded(encoded_bytes data) {
 
 void file_writer::write_decoded(std::vector<byte> data) {
     std::string result;
+    result.reserve(data.size());
     for (byte x : data) {
         result.push_back(x);
     }
